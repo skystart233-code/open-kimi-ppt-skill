@@ -5,10 +5,10 @@
 [![npm version](https://img.shields.io/npm/v/open-kimi-ppt-skill)](https://www.npmjs.com/package/open-kimi-ppt-skill)
 [![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 
-逆向 Kimi Slides 实现的非官方演示文稿 Skill，让 AI Coding Agent 可以创建、编辑、复刻、读取并导出 PPT/PPTX。每次生成默认产出两份文件：可继续编辑的 PPTD 项目，以及嵌入字体、带淡入淡出翻页切换的 PPTX。支持页内元素动画和[预设主题](theme.md)，附带本地浏览器编辑器，可随时手动导出 PPTX。支持 Codex、Claude Code、Cursor、WorkBuddy 等任何兼容 SKILL.md 规范的 Agent。
+面向 AI Coding Agent 的 PPTD 演示文稿 Skill，可创建、编辑、复刻、读取并导出 PPT/PPTX。每次生成默认产出可继续编辑的 PPTD 项目和带淡入淡出翻页切换的 PPTX。保留原有 Kimi 风格[预设主题](theme.md)，编辑、图片渲染和 PPTX 导出已切换为内置 Open-PPTD 引擎，不依赖 Kimi 网页编辑器。
 
 > [!IMPORTANT]
-> 本项目通过逆向分析 Kimi Slides Skill、PPTD 格式以及公开网页编辑器的前端行为与通信协议实现，并非 Kimi 或 Moonshot AI 的官方项目，也未获得其认可或支持。项目依赖的公开前端资源和兼容协议可能随 Kimi 更新而失效，仅供学习与研究使用。
+> 本项目保留了基于 Kimi Slides/PPTD 形成的格式资料与模板，但默认编辑和导出由独立的 Open-PPTD 本地实现完成。它不是 Kimi 或 Moonshot AI 的官方项目，也未获得其认可或支持。
 
 ## 安装
 
@@ -98,14 +98,13 @@ npx open-kimi-ppt-skill@latest install --target ~/.codex/skills --target ~/.clau
 
 [![iPhone 17 Pro](docs/images/example-iphone-17pro.png)](docs/images/example-iphone-17pro.png)
 
-**示例 4：带页内元素动画（现场演示）**
+**示例 4：小米 YU7 图片背景案例**
 
 ```text
 使用 open-kimi-ppt 做一个介绍小米 yu7的 PPT,要求图片做背景,素材从网上找,8 页左右
-要求带元素入场动画
 ```
 
-成品示例见 [example/xiaomi-yu7-ppt-animation](example/xiaomi-yu7-ppt-animation)（含 PPTD 项目与 PPTX，可用 `npx open-kimi-ppt-skill serve` 打开预览动画）。
+成品示例见 [example/xiaomi-yu7-ppt-animation](example/xiaomi-yu7-ppt-animation)（含 PPTD 项目与 PPTX）。项目仍保留原 Kimi 动画元数据，但 Open-PPTD 只预览和导出静态版式。
 
 ### 在线编辑与手动导出
 
@@ -121,7 +120,7 @@ npx open-kimi-ppt-skill@latest install --target ~/.codex/skills --target ~/.clau
 npx open-kimi-ppt-skill serve
 ```
 
-然后打开 <http://127.0.0.1:55173/>，选择包含 `.pptd` 清单、`pages/` 和 `media/` 的完整项目文件夹，即可在浏览器中查看、编辑项目并导出 PPTX。仓库自带的 [example/dji-pocket4](example/dji-pocket4) 是一个完整的 18 页示例项目，可直接打开体验。
+然后打开 <http://127.0.0.1:55173/editor/>，选择包含 `.pptd` 清单、`pages/` 和 `media/` 的完整项目文件夹，即可在浏览器中查看、编辑项目并导出 PPTX。仓库自带的 [example/dji-pocket4](example/dji-pocket4) 是一个完整的 18 页示例项目，可直接打开体验。
 
 ```bash
 # 启动后自动打开浏览器
@@ -133,23 +132,14 @@ npx open-kimi-ppt-skill serve --port 56000
 
 可写目录需要使用支持 File System Access API 的 Chromium 系浏览器；其他浏览器会回退为只读文件夹上传。按 `Ctrl+C` 停止服务。
 
-### Windows：常驻调试浏览器说明
-
-在 Windows 上导出 PPTX 时，脚本会自动启动一个**常驻的调试浏览器**。这是有意设计，不是异常进程：
-
-- **为什么需要**：agent-browser 在 Windows 下无法自行启动 Chrome（Chrome 启动器把进程交接给子进程后立即退出，被误判为崩溃），导出只能改为驱动一个外部启动的浏览器。
-- **它是什么**：优先使用本机 Chrome，未安装时回退到 Edge；以 `--remote-debugging-port`（默认 `9337`）和独立配置目录 `%TEMP%\okp-cdp-profile` 启动，窗口定位在屏幕外，不影响日常使用。
-- **为什么常驻**：导出完成后实例保持运行，下次导出会复用同一个实例，而不是每导一次就多一个浏览器进程——设计目标是「最多一个，反复复用」。若想关掉，直接结束该浏览器进程即可，下次导出会自动重新拉起。
-- **想完全自控**：自行以 `--remote-debugging-port=<端口>` 启动浏览器，并把环境变量 `AGENT_BROWSER_CDP` 设为该端口，脚本会优先使用你自己的实例。
-
-macOS / Linux 无此行为，不受影响。
+命令行导出 PPTX 不会启动浏览器；只有图片质检和人工编辑需要 Chrome/Edge。
 
 ## 功能特性
 
 - PPTD 生成：让 Agent 生成完整、可继续编辑的 PPTD 项目，支持从零创作、风格迁移、模板复用、图片/PDF 复刻。
 - 预设主题：内置约 30 套官方同款 design system，点名即可套用；完整列表与预览图见 [theme.md](theme.md)。
-- 元素动画：默认不加。提示词加上「要求带元素入场动画」即可，由 AI 按页编排合适的入场效果。
-- PPTX 生成：默认同步生成 PPTX，自动嵌入字体并写入淡入淡出翻页切换（与页内元素动画是两回事）。
+- 元素动画元数据：已有 Kimi 动画字段会被保留，但 Open-PPTD 当前不执行或导出页内元素动画。
+- PPTX 生成：默认同步生成 PPTX；可用字体文件存在时自动嵌入，并写入淡入淡出翻页切换（与页内元素动画是两回事）。
 - 视觉质检：多模态模型在导出 PPTX 前自动导出整份页面图片、拼接总览图逐项核查（变形、遮挡、出界、对比度、排版、文字溢出），问题页面修复后复检，直至全部通过。
 - 在线编辑：通过浏览器查看和编辑本地 PPTD 项目，自动保存，可配置页面切换动画。
 - 手动导出：在编辑器中随时手动导出 PPTX。
@@ -172,8 +162,8 @@ macOS / Linux 无此行为，不受影响。
 具体来说：
 
 - PPTD 用 YAML 描述主题、布局与元素，比直接写 OOXML / pptxgenjs 更稳，也比整页渲一张图更方便局部修改。
-- 默认同时交付两份文件：可继续迭代的 PPTD 项目，加上嵌字体、带淡入淡出翻页的 PPTX，不是只给半成品。
-- 提示词写「要求带元素入场动画」即可启用元素动画，具体效果与节奏由 AI 处理，不用自己点名动画类型。
+- 默认同时交付两份文件：可继续迭代的 PPTD 项目，加上在字体资源可用时嵌入字体、带淡入淡出翻页的 PPTX，不是只给半成品。
+- 原 Kimi 元素动画字段会保留在 PPTD 中，方便将来由兼容执行器继续使用；当前 Open-PPTD 不执行这些动画。
 - 导出的 PPTX 里，文本框、形状仍可在 PowerPoint / WPS 中编辑，不像图片型 PPT 只能当海报。
 - 浏览器里可以预览、微调、配置切换动画并再次导出，不用每次都让 Agent 重跑全流程。
 - 导出前会做视觉质检：整页截图加总览图，检查遮挡、出界、对比度、溢出等问题，修完再出 PPTX。
@@ -233,12 +223,12 @@ deck/
 - CLI 只在 `127.0.0.1` 启动静态文件服务，不会监听局域网地址。
 - 浏览器只在用户主动授权后读取完整 PPTD 项目目录。
 - 保存回调只允许修改 `.pptd` 和 `.page` 文件，并拒绝绝对路径与 `..` 路径越界。
-- PPTD 内容由本地宿主交给公开的 Kimi 网页编辑器处理；远程图片、字体和编辑器资源仍可能从对应服务器加载。
-- 本项目不会提供或注入 Kimi 登录令牌，也不会访问用户的 Kimi 私有文稿。
+- 编辑器、渲染器和 PPTX writer 都随项目本地提供，不上传 PPTD，也不需要 Kimi 登录。
+- 文稿主动引用的远程图片或字体仍可能从各自来源加载。
 
 ## 兼容性说明
 
-这是针对当前公开实现的兼容宿主，不是稳定的官方 SDK。Kimi 更新前端资源哈希、PPTD 格式或 iframe/RPC 协议后，本项目可能需要同步升级。成功生成 PPTX 也不代表 PowerPoint、WPS 和 Keynote 对所有动画效果都能完全一致地播放。
+Kimi 风格模板是设计说明，继续生成标准 PPTD v2，因此可在 Open-PPTD 中使用。未知字段（包括 Kimi 元素动画元数据）在编辑保存时会保留，但 Open-PPTD 当前不执行这些页内元素动画，导出的 PPTX 只保证静态版式和幻灯片级淡入淡出。成功生成 PPTX 也不代表 PowerPoint、WPS 和 Keynote 的播放效果完全一致。
 
 ## 本地开发
 

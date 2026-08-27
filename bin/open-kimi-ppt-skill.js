@@ -367,7 +367,7 @@ async function main() {
   }
 
   const { server, url } = await startEditorServer({ port: options.port });
-  console.log(`Open Kimi PPT editor is running at ${url}`);
+  console.log(`Open-PPTD editor is running at ${url}`);
   console.log("Press Ctrl+C to stop the server.");
   if (options.open) openBrowser(url);
 

@@ -4,6 +4,20 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.3.0] - 2026-08-27
+
+### 变更
+
+- 默认编辑器替换为内置 Open-PPTD，不再加载 `www.kimi.com` 或 Moonshot 静态资源
+- PPTX 导出改用本地 Open-PPTD OOXML writer，不再依赖浏览器下载、agent-browser 或 Kimi 登录状态
+- 图片质检改用 Open-PPTD 本地无头渲染器
+- 保留全部 Kimi 风格 design system；PPTD v2 版式、主题和资源继续兼容
+- Kimi 元素动画字段在编辑保存时原样保留，但 Open-PPTD 当前只导出静态页；文档和测试已明确该边界
+
+### 安全
+
+- PPTD 项目不再交给第三方网页编辑器处理；仅文稿主动引用的远程资源可能联网
+
 ## [1.2.0] - 2026-08-06
 
 ### 新增

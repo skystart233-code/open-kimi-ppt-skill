@@ -4,6 +4,20 @@
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-08-27
+
+### Changed
+
+- Replaced the default editor with the bundled Open-PPTD editor; `www.kimi.com` and Moonshot static assets are no longer loaded
+- Switched PPTX export to the local Open-PPTD OOXML writer, removing browser-download, agent-browser, and Kimi-session dependencies
+- Switched image QA to Open-PPTD's local headless renderer
+- Retained every Kimi-style design system; PPTD v2 layout, theme, and resource compatibility remains intact
+- Kimi element-animation metadata survives edit/save round trips, but Open-PPTD currently exports static slides only; this boundary is documented and tested
+
+### Security
+
+- PPTD projects are no longer passed to a third-party web editor; only remote resources explicitly referenced by a deck may use the network
+
 ## [1.2.0] - 2026-08-06
 
 ### Added

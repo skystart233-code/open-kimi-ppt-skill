@@ -25,6 +25,10 @@ test("installs the packaged skill into a custom skills directory", () => {
     assert.equal(result.status, 0, result.stderr);
     assert.equal(existsSync(join(target, "open-kimi-ppt", "SKILL.md")), true);
     assert.equal(existsSync(join(target, "open-kimi-ppt", "scripts", "export_pptx.py")), true);
+    assert.equal(
+      existsSync(join(target, "open-kimi-ppt", "vendor", "open-pptd", "bin", "open-pptd.js")),
+      true,
+    );
     assert.equal(existsSync(join(target, "open-kimi-ppt", "_user_meta.json")), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -138,7 +142,7 @@ test("overwrites an existing installation by default", () => {
     const result = runCli(["--target", target]);
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Updated open-kimi-ppt/);
-    assert.match(readFileSync(skillFile, "utf8"), /^---\nname: open-kimi-ppt/m);
+    assert.match(readFileSync(skillFile, "utf8"), /^---\r?\nname: open-kimi-ppt/m);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

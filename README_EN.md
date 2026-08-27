@@ -5,10 +5,10 @@
 [![npm version](https://img.shields.io/npm/v/open-kimi-ppt-skill)](https://www.npmjs.com/package/open-kimi-ppt-skill)
 [![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 
-An unofficial presentation skill for AI coding agents, reverse-engineered from Kimi Slides. It lets your agent create, edit, replicate, read, and export PPT/PPTX files. Each run produces two outputs by default: an editable PPTD project, and a PPTX with embedded fonts and fade page transitions. On-slide element animations and [preset themes](theme_EN.md) are supported, and a local in-browser PPTD editor is included for manual export. Works with Codex, Claude Code, Cursor, WorkBuddy, and any agent that supports the SKILL.md format.
+A PPTD presentation skill for AI coding agents. It creates, edits, replicates, reads, and exports PPT/PPTX files, producing both an editable PPTD project and a PPTX with fade slide transitions. Existing Kimi-style [preset themes](theme_EN.md) remain available, while editing, rendering, and PPTX export now use the bundled Open-PPTD engine instead of the Kimi web editor.
 
 > [!IMPORTANT]
-> This project is implemented by reverse-engineering the Kimi Slides skill, the PPTD format, and the frontend behavior and communication protocol of the publicly accessible web editor. It is not an official Kimi or Moonshot AI project and is not endorsed or supported by them. Public frontend resources and compatibility contracts used by this project may change without notice. Provided for learning and research purposes only.
+> This project retains format documentation and templates derived from Kimi Slides/PPTD, but its default editor and exporter are the independent local Open-PPTD implementation. It is not an official Kimi or Moonshot AI project and is not endorsed or supported by them.
 
 ## Install
 
@@ -86,14 +86,13 @@ Use open-kimi-ppt to create an iPhone 17 Pro intro PPT.
 
 [![iPhone 17 Pro](docs/images/example-iphone-17pro.png)](docs/images/example-iphone-17pro.png)
 
-**Example: on-slide element animations (live presentation)**
+**Example: Xiaomi YU7 image-background deck**
 
 ```text
 Use open-kimi-ppt to create a Xiaomi YU7 intro PPT, with images as backgrounds from the web, about 8 pages.
-Require element entrance animations.
 ```
 
-See the sample deck at [example/xiaomi-yu7-ppt-animation](example/xiaomi-yu7-ppt-animation) (PPTD project + PPTX; open with `npx open-kimi-ppt-skill serve` to preview animations).
+See the sample deck at [example/xiaomi-yu7-ppt-animation](example/xiaomi-yu7-ppt-animation) (PPTD project + PPTX). Its original Kimi animation metadata remains in the project, but Open-PPTD previews and exports the static layout only.
 
 ### Edit online and export manually
 
@@ -109,7 +108,7 @@ Or run it yourself in a terminal:
 npx open-kimi-ppt-skill serve
 ```
 
-Then open <http://127.0.0.1:55173/> and choose a complete project folder containing the `.pptd` manifest, `pages/`, and `media/` to view, edit, and export PPTX in the browser. The bundled [example/dji-pocket4](example/dji-pocket4) project — a complete 18-page deck — is ready to open for a quick tour.
+Then open <http://127.0.0.1:55173/editor/> and choose a complete project folder containing the `.pptd` manifest, `pages/`, and `media/` to view, edit, and export PPTX in the browser. The bundled [example/dji-pocket4](example/dji-pocket4) project — a complete 18-page deck — is ready to open for a quick tour.
 
 ```bash
 # Open the browser after startup
@@ -121,23 +120,14 @@ npx open-kimi-ppt-skill serve --port 56000
 
 Writable folder access requires a Chromium-based browser with the File System Access API. Other browsers fall back to read-only folder upload. Press `Ctrl+C` to stop the server.
 
-### Windows: a persistent debug browser
-
-On Windows, exporting PPTX automatically starts a **persistent debug browser**. This is by design, not a stray process:
-
-- **Why it's needed**: agent-browser cannot launch Chrome by itself on Windows (the Chrome launcher hands off to a child process and exits immediately, which is misread as a crash), so the export drives an externally started browser instead.
-- **What it is**: your installed Chrome (falling back to Edge), launched with `--remote-debugging-port` (default `9337`) and a dedicated profile at `%TEMP%\okp-cdp-profile`, with the window positioned off-screen so it stays out of the way.
-- **Why it persists**: the instance intentionally keeps running after the export. Relaunching with the same profile joins the existing browser, so repeated exports reuse one instance instead of piling up processes — the design goal is "at most one, reused forever". To get rid of it, just kill the browser process; the next export starts a fresh one.
-- **Take full control**: start your own browser with `--remote-debugging-port=<port>` and set the `AGENT_BROWSER_CDP` environment variable to that port; the script prefers your instance.
-
-macOS and Linux are unaffected.
+Command-line PPTX export no longer launches a browser. Chrome/Edge is needed only for image QA and interactive editing.
 
 ## Features
 
 - PPTD generation: let your agent generate complete, editable PPTD projects, from scratch, with style transfer, template reuse, or replication from images/PDFs.
 - Preset themes: ~30 official-style design systems you can name to apply; full list with previews in [theme_EN.md](theme_EN.md).
-- Element animations: off by default. Add `Require element entrance animations` to the prompt and the agent picks suitable on-slide effects per page.
-- PPTX generation: a matching PPTX is produced by default, with fonts embedded and fade page transitions written automatically (separate from on-slide element animations).
+- Element-animation metadata: existing Kimi fields are preserved, but Open-PPTD does not currently execute or export those on-slide animations.
+- PPTX generation: a matching PPTX is produced by default; available font files are embedded when possible, and fade page transitions are written automatically.
 - Visual QA: with a multimodal model, the skill exports every page as an image, stitches them into an overview sheet, and checks each page (distortion, occlusion, out-of-bounds elements, contrast, layout consistency, text overflow) before PPTX export, fixing and re-checking until every page passes.
 - Online editing: view and edit local PPTD projects in a browser, with autosave and configurable slide transitions.
 - Manual export: export PPTX manually from the editor at any time.
@@ -160,8 +150,8 @@ Most PPT skills fall into three buckets: assemble OOXML / pptxgenjs in code, ren
 Specifically:
 
 - PPTD describes theme, layout, and elements in YAML, which is more stable than raw OOXML / pptxgenjs and easier to edit locally than full-slide images.
-- You get both deliverables by default: an iterable PPTD project plus a ready-to-open PPTX with embedded fonts and fade page transitions.
-- Add `Require element entrance animations` to the prompt and the agent chooses effects and timing for you.
+- You get both deliverables by default: an iterable PPTD project plus a ready-to-open PPTX with font embedding enabled when font resources are available and fade page transitions.
+- Existing Kimi element-animation metadata is preserved, but Open-PPTD does not currently execute or export those on-slide animations.
 - Text boxes and shapes in the exported PPTX remain editable in PowerPoint / WPS, unlike image-only decks.
 - You can preview, tweak, set transitions, and re-export in the browser without rerunning the whole agent flow.
 - Before export, full-page screenshots plus an overview sheet are used to catch occlusion, overflow, contrast, and layout issues.
@@ -221,12 +211,12 @@ deck/
 - The CLI serves static files on `127.0.0.1` only and does not listen on LAN interfaces.
 - The browser reads a complete PPTD project directory only after explicit user authorization.
 - Save callbacks may only modify `.pptd` and `.page` files; absolute paths and `..` traversal are rejected.
-- The local host passes PPTD content to the public Kimi web editor. Remote images, fonts, and editor resources may still be fetched from their respective servers.
-- This project does not provide or inject Kimi login tokens and does not access private Kimi documents.
+- The editor, renderer, and PPTX writer are bundled locally; PPTD projects are not uploaded and Kimi login is not required.
+- Remote images or fonts explicitly referenced by a deck may still be fetched from their own hosts.
 
 ## Compatibility
 
-This is a compatibility host for the current public implementation, not a stable official SDK. Updates to Kimi frontend asset hashes, the PPTD format, or the iframe/RPC protocol may require a corresponding project update. Successfully generating a PPTX does not guarantee identical animation playback in PowerPoint, WPS, and Keynote.
+Kimi-style templates are design instructions that continue to generate standard PPTD v2, so they remain usable in Open-PPTD. Unknown metadata, including Kimi element-animation fields, is preserved while editing, but Open-PPTD currently exports the static slide state only; slide-level fade transitions remain supported. A valid PPTX does not guarantee identical playback in PowerPoint, WPS, and Keynote.
 
 ## Local development
 
