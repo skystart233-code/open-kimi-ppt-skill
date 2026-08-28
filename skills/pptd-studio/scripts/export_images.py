@@ -161,7 +161,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         output = args.output or manifest.parent / ".qa-images"
         summary = export_images(args.input, output, args.keep_browser_raw, args.force)
     except (ExportError, OSError, subprocess.SubprocessError) as exc:
-        print(f"open-kimi-ppt image export failed: {exc}", file=sys.stderr)
+        print(f"pptd-studio image export failed: {exc}", file=sys.stderr)
         return 1
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0

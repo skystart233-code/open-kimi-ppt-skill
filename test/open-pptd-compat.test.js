@@ -3,9 +3,9 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { parseDeck, serializeDeck } from "../skills/open-kimi-ppt/vendor/open-pptd/editor/core/pptd-io.js";
-import { mediaFilesOfDeck } from "../skills/open-kimi-ppt/vendor/open-pptd/editor/app/project/images.js";
-import { exportDeck } from "../skills/open-kimi-ppt/vendor/open-pptd/lib/pptd-export.js";
+import { parseDeck, serializeDeck } from "../skills/pptd-studio/vendor/open-pptd/editor/core/pptd-io.js";
+import { mediaFilesOfDeck } from "../skills/pptd-studio/vendor/open-pptd/editor/app/project/images.js";
+import { exportDeck } from "../skills/pptd-studio/vendor/open-pptd/lib/pptd-export.js";
 
 test("preserves Kimi-only animation metadata during an Open-PPTD round trip", () => {
   const manifest = `version: v2\ntitle: compatibility\nsize: [960, 540]\npages: [pages/1.page]\n`;
@@ -20,8 +20,8 @@ test("preserves Kimi-only animation metadata during an Open-PPTD round trip", ()
   assert.match(savedPage, /fadeIn/);
 });
 
-test("exports the packaged Kimi PPTD fixture with the Open-PPTD writer", async () => {
-  const root = resolve("skills/open-kimi-ppt/tests/fixtures/minimal");
+test("exports the packaged PPTD fixture with the Open-PPTD writer", async () => {
+  const root = resolve("skills/pptd-studio/tests/fixtures/minimal");
   const temp = mkdtempSync(join(tmpdir(), "open-pptd-compat-"));
   const output = join(temp, "minimal.pptx");
   try {

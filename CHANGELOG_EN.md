@@ -4,6 +4,27 @@
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-08-28
+
+### Breaking changes
+
+- Renamed the project, npm package, CLI, and Skill to `pptd-studio-skill`,
+  `pptd-studio-skill`, `pptd-studio-skill`, and `pptd-studio`, respectively
+- Moved the GitHub repository to `skystart233-code/pptd-studio-skill`
+- New installation does not automatically delete the legacy `open-kimi-ppt`
+  Skill directory
+
+### Documentation and open-source compliance
+
+- Rewrote the Chinese and English READMEs to document the Open-PPTD editor
+  changes, template compatibility, animation boundary, installation status,
+  security model, and migration path
+- Preserved the original MIT copyright and added `NOTICE`, `CONTRIBUTING.md`,
+  `SECURITY.md`, and a third-party component inventory
+- Added redistribution license texts for Open-PPTD, Apache ECharts, d3,
+  js-yaml, KaTeX, and Bootstrap Icons; installed Skill copies retain the
+  required notices
+
 ## [1.3.0] - 2026-08-27
 
 ### Changed

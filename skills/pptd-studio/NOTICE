@@ -1,0 +1,14 @@
+PPTD Studio Skill
+Copyright (c) 2026 skystart233-code contributors.
+
+Derived from acnlie/open-kimi-ppt-skill under the MIT License. The root
+license identifies Copyright (c) 2026 Binaryify Zhuang and is preserved in
+this directory as LICENSE.txt.
+
+The bundled editor, renderer, and writer are derived from Open-PPTD at pinned
+revision d7ee121a0c07538fad39c1d67a5e3ecfae56a116. Local changes are recorded
+in vendor/open-pptd/UPSTREAM.md. Third-party notices and license texts are in
+vendor/open-pptd/THIRD_PARTY_NOTICES.md and vendor/open-pptd/LICENSES/.
+
+No affiliation with or endorsement by Kimi, Moonshot AI, Open-PPTD,
+Microsoft, or other trademark owners is implied.

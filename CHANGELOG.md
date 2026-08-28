@@ -4,6 +4,24 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.0.0] - 2026-08-28
+
+### 破坏性变更
+
+- 项目、npm 包、CLI 和 Skill 分别重命名为 `pptd-studio-skill`、
+  `pptd-studio-skill`、`pptd-studio-skill` 和 `pptd-studio`
+- GitHub 仓库迁移为 `skystart233-code/pptd-studio-skill`
+- 新安装不会自动删除旧的 `open-kimi-ppt` Skill 目录
+
+### 文档与开源合规
+
+- 全面重写中英文 README，准确说明 Open-PPTD 编辑器改动、模板兼容性、
+  动画限制、安装状态、安全边界和迁移方式
+- 保留原项目 MIT 版权声明，并新增 `NOTICE`、`CONTRIBUTING.md`、
+  `SECURITY.md` 与第三方组件清单
+- 为 Open-PPTD、Apache ECharts、d3、js-yaml、KaTeX 和 Bootstrap Icons
+  补齐再分发许可文本；安装后的 Skill 目录也包含所需通知
+
 ## [1.3.0] - 2026-08-27
 
 ### 变更

@@ -34,7 +34,7 @@ class ExportError(RuntimeError):
 
 
 def log(message: str) -> None:
-    print(f"[open-kimi-ppt] {message}", file=sys.stderr, flush=True)
+    print(f"[pptd-studio] {message}", file=sys.stderr, flush=True)
 
 
 def find_manifest(source: Path) -> Path:
@@ -203,8 +203,8 @@ def export_pptx(
     summary["transitionPatchedSlides"] = patched
     summary["output"] = str(output)
     summary["compatibility"] = {
-        "kimiTemplates": "supported via PPTD v2",
-        "kimiElementAnimations": "preserved in PPTD; not rendered by Open-PPTD",
+        "legacyDesignSystems": "supported via PPTD v2",
+        "legacyElementAnimations": "preserved in PPTD; not rendered by Open-PPTD",
     }
     return summary
 
@@ -240,7 +240,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.keep_browser_raw, args.force,
         )
     except (ExportError, OSError, subprocess.SubprocessError, zipfile.BadZipFile) as exc:
-        print(f"open-kimi-ppt export failed: {exc}", file=sys.stderr)
+        print(f"pptd-studio export failed: {exc}", file=sys.stderr)
         return 1
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0

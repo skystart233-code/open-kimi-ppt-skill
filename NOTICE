@@ -1,0 +1,20 @@
+PPTD Studio Skill
+Copyright (c) 2026 skystart233-code contributors.
+
+This project is a renamed and substantially modified derivative of
+acnlie/open-kimi-ppt-skill, whose root MIT license identifies
+Copyright (c) 2026 Binaryify Zhuang. That copyright and license notice are
+preserved in LICENSE and in the repository history.
+
+The bundled editor, renderer, and PPTX writer are derived from Open-PPTD:
+https://github.com/Shingwha/open-pptd
+Pinned source revision: d7ee121a0c07538fad39c1d67a5e3ecfae56a116
+
+PPTD Studio Skill includes local modifications to Open-PPTD's page-background
+image loading, persistence, rendering, and package export. See
+skills/pptd-studio/vendor/open-pptd/UPSTREAM.md for the patch summary.
+
+Third-party software notices and license locations are listed in
+THIRD_PARTY_NOTICES.md. Kimi, Kimi Slides, Moonshot AI, Open-PPTD, Microsoft,
+PowerPoint, WPS, Keynote, and other names or marks belong to their respective
+owners. This project is not endorsed by or affiliated with those owners.

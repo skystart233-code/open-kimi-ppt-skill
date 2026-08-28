@@ -1,231 +1,192 @@
-# open-kimi-ppt-skill
+# PPTD Studio Skill
 
 [简体中文](README.md) | [English](README_EN.md)
 
-[![npm version](https://img.shields.io/npm/v/open-kimi-ppt-skill)](https://www.npmjs.com/package/open-kimi-ppt-skill)
-[![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
-
-A PPTD presentation skill for AI coding agents. It creates, edits, replicates, reads, and exports PPT/PPTX files, producing both an editable PPTD project and a PPTX with fade slide transitions. Existing Kimi-style [preset themes](theme_EN.md) remain available, while editing, rendering, and PPTX export now use the bundled Open-PPTD engine instead of the Kimi web editor.
+A local-first presentation toolchain for AI coding agents. It uses readable,
+versionable PPTD v2 projects, provides browser-based editing and visual QA,
+and exports PPTX files whose text, shapes, images, and charts remain editable.
 
 > [!IMPORTANT]
-> This project retains format documentation and templates derived from Kimi Slides/PPTD, but its default editor and exporter are the independent local Open-PPTD implementation. It is not an official Kimi or Moonshot AI project and is not endorsed or supported by them.
+> PPTD Studio Skill is an independently maintained open-source derivative. It
+> is not an official product of Kimi, Moonshot AI, Open-PPTD, Microsoft, or any
+> other vendor. Provenance, modifications, and redistributed licenses are
+> documented here and in [NOTICE](NOTICE).
+
+## Capabilities
+
+- Create, edit, replicate, and inspect PPTD/PPTX presentations with an agent.
+- Deliver both the complete PPTD project and a matching PPTX by default.
+- Edit PPTD locally in a browser and save changes back to the project folder.
+- Export editable text, shapes, images, charts, and fade slide transitions.
+- Render every page and stitch an overview image for multimodal visual QA.
+- Reuse the legacy design-system references inherited from the predecessor;
+  they continue to generate standard PPTD v2.
+
+## Editor migration
+
+Since 2.0.0, the project no longer loads the Kimi web editor or Moonshot static
+assets. Editing, rendering, and PPTX writing use a bundled, pinned
+[Open-PPTD](https://github.com/Shingwha/open-pptd) runtime.
+
+This integration adds:
+
+1. a loopback-only editor served by `pptd-studio-skill serve`;
+2. local OOXML export without browser-driven downloads;
+3. local headless rendering for visual QA;
+4. complete page-background image preload, persistence, preview, and package
+   export mapping;
+5. ZIP, slide-count, and transition-structure checks for generated PPTX files.
+
+### Legacy template compatibility
+
+| Content | Status |
+| --- | --- |
+| PPTD v2 manifest, pages, themes, and layouts | Supported |
+| Text, shapes, images, backgrounds, tables, and charts | Supported |
+| Predecessor design-system references | Supported; they generate PPTD v2 |
+| Unknown PPTD fields | Preserved during edit/save |
+| Slide-level fade transitions | Supported |
+| Kimi-specific on-slide element animations | Metadata preserved; not played or exported by Open-PPTD |
+
+The practical boundary is the proprietary animation executor, not ordinary
+template layout. Keep the metadata when needed and disclose that the current
+PPTX export contains the static slide state.
+
+## Requirements
+
+- Node.js 18+;
+- Python 3 for the export helper scripts;
+- Chrome or Edge only for interactive editing and image rendering;
+- Pillow for the QA overview; the helper attempts installation when missing;
+- font files are optional: available files can be embedded, otherwise Office
+  applications fall back to installed fonts.
 
 ## Install
 
-Node.js 18 or later is required. **Install with `npx` — do not clone the repository**: the repo ships many images and is heavy, while `npx` only fetches the packaged skill files. The default location is the shared directory `~/.agents/skills/open-kimi-ppt` (Windows: `%USERPROFILE%\.agents\skills\open-kimi-ppt`), which most agents discover with a single install.
-
-### Option 1: Ask your agent (recommended)
-
-Say "Install the open-kimi-ppt skill for me with npx", or have it run:
+The current release is installed from GitHub. This README does not claim that
+the renamed npm package has already been published.
 
 ```bash
-npx open-kimi-ppt-skill@latest install -y
+# Install non-interactively into ~/.agents/skills/pptd-studio
+npx --yes github:skystart233-code/pptd-studio-skill install -y
+
+# Install into one or more agent skill directories
+npx --yes github:skystart233-code/pptd-studio-skill install \
+  --target ~/.codex/skills \
+  --target ~/.claude/skills
+
+# Install into every detected agent directory
+npx --yes github:skystart233-code/pptd-studio-skill install --all
 ```
 
-**WorkBuddy users**: WorkBuddy can't discover the shared directory. Say "Install the open-kimi-ppt skill for me with npx into WorkBuddy", or have it run:
+Or run from source:
 
 ```bash
-# macOS / Linux
-npx open-kimi-ppt-skill@latest install --target ~/.workbuddy/skills
-# Windows
-npx open-kimi-ppt-skill@latest install --target %USERPROFILE%\.workbuddy\skills
+git clone https://github.com/skystart233-code/pptd-studio-skill.git
+cd pptd-studio-skill
+node bin/pptd-studio-skill.js install -y
 ```
 
-### Option 2: Manual install
+Re-running installation atomically updates the `pptd-studio` directory and
+does not modify presentations you already created.
 
-```bash
-# Interactive checklist (space to select, Enter to confirm)
-npx open-kimi-ppt-skill install
+### Migrating from 1.x
 
-# Non-interactive: shared directory only
-npx open-kimi-ppt-skill install -y
+Version 2.0.0 renames the skill directory from `open-kimi-ppt` to
+`pptd-studio`. After installing and verifying the new version, remove the old
+directory to prevent duplicate skill discovery. The installer intentionally
+does not delete that directory without user action.
 
-# All detected agent skill directories (missing ones are skipped)
-npx open-kimi-ppt-skill install --all
-```
+## Quick start
 
-Directories detected by `--all` and the interactive checklist: `~/.agents/skills`, `~/.codex/skills`, `~/.claude/skills`, `~/.cursor/skills`, `~/.workbuddy/skills`.
-
-### When an agent can't discover the skill
-
-Start with the shared directory instead of installing once per agent. If a specific agent can't discover the skill there, pass its directory explicitly (`--target` may be repeated; on Windows use `%USERPROFILE%` instead of `~`):
-
-```bash
-npx open-kimi-ppt-skill@latest install --target ~/.codex/skills --target ~/.claude/skills
-```
-
-### Update
-
-Run `npx open-kimi-ppt-skill@latest install -y` again to overwrite the local installation; if you originally used `--target` / `--all`, pass the same flags. Updating only replaces the skill files and does not touch PPTD / PPTX projects you already generated.
-
-## Usage
-
-### Generate a presentation with your agent
-
-Once installed, just describe what you need. By default you get both the complete, editable PPTD project directory and the matching PPTX file. PPTX generation is skipped only when you explicitly ask for PPTD-only output.
-
-For more stable quality, put a style in the prompt (e.g. “dark product-launch look”) or attach a reference PPT template; topic-only prompts without style guidance tend to vary more.
+After installation, describe the content, page count, and visual direction:
 
 ```text
-Use open-kimi-ppt to create a liquid-glass-style deck about the history of Apple.
+Use pptd-studio to create a 10-slide product-launch deck with a dark technical
+style and image backgrounds. Deliver both the editable PPTD project and PPTX,
+and perform visual QA before export.
 ```
 
-**Example: Xiaomi YU7 (~8 pages, images as backgrounds)**
-
-```text
-Use open-kimi-ppt to create a Xiaomi YU7 intro PPT, with images as backgrounds from the web, about 8 pages.
-```
-
-[![WorkBuddy generating Xiaomi YU7 PPT](docs/images/example-workbuddy-yu7.png)](docs/images/example-workbuddy-yu7.png)
-
-**Example: iPhone 17 Pro (~8 pages)**
-
-```text
-Use open-kimi-ppt to create an iPhone 17 Pro intro PPT.
-```
-
-[![iPhone 17 Pro](docs/images/example-iphone-17pro.png)](docs/images/example-iphone-17pro.png)
-
-**Example: Xiaomi YU7 image-background deck**
-
-```text
-Use open-kimi-ppt to create a Xiaomi YU7 intro PPT, with images as backgrounds from the web, about 8 pages.
-```
-
-See the sample deck at [example/xiaomi-yu7-ppt-animation](example/xiaomi-yu7-ppt-animation) (PPTD project + PPTX). Its original Kimi animation metadata remains in the project, but Open-PPTD previews and exports the static layout only.
-
-### Edit online and export manually
-
-Prefer asking your agent to start the local editor, for example:
-
-```text
-Run npx open-kimi-ppt-skill serve for me.
-```
-
-Or run it yourself in a terminal:
+### Start the local editor
 
 ```bash
-npx open-kimi-ppt-skill serve
+npx --yes github:skystart233-code/pptd-studio-skill serve --open
 ```
 
-Then open <http://127.0.0.1:55173/editor/> and choose a complete project folder containing the `.pptd` manifest, `pages/`, and `media/` to view, edit, and export PPTX in the browser. The bundled [example/dji-pocket4](example/dji-pocket4) project — a complete 18-page deck — is ready to open for a quick tour.
+Or, from a source checkout:
 
 ```bash
-# Open the browser after startup
-npx open-kimi-ppt-skill serve --open
-
-# Use another port
-npx open-kimi-ppt-skill serve --port 56000
+node bin/pptd-studio-skill.js serve --open
 ```
 
-Writable folder access requires a Chromium-based browser with the File System Access API. Other browsers fall back to read-only folder upload. Press `Ctrl+C` to stop the server.
+The default URL is <http://127.0.0.1:55173/editor/>. In Chrome or Edge, select
+the complete folder containing `.pptd`, `pages/`, and `media/`. Writable folder
+access is granted only after the user chooses the directory.
 
-Command-line PPTX export no longer launches a browser. Chrome/Edge is needed only for image QA and interactive editing.
+### Export directly
 
-## Features
+```bash
+python ~/.agents/skills/pptd-studio/scripts/export_pptx.py \
+  /path/to/deck.pptd --output /path/to/deck.pptx
 
-- PPTD generation: let your agent generate complete, editable PPTD projects, from scratch, with style transfer, template reuse, or replication from images/PDFs.
-- Preset themes: ~30 official-style design systems you can name to apply; full list with previews in [theme_EN.md](theme_EN.md).
-- Element-animation metadata: existing Kimi fields are preserved, but Open-PPTD does not currently execute or export those on-slide animations.
-- PPTX generation: a matching PPTX is produced by default; available font files are embedded when possible, and fade page transitions are written automatically.
-- Visual QA: with a multimodal model, the skill exports every page as an image, stitches them into an overview sheet, and checks each page (distortion, occlusion, out-of-bounds elements, contrast, layout consistency, text overflow) before PPTX export, fixing and re-checking until every page passes.
-- Online editing: view and edit local PPTD projects in a browser, with autosave and configurable slide transitions.
-- Manual export: export PPTX manually from the editor at any time.
-- Format conversion: convert existing PPTX files to PPTD for further editing.
-- Secure by design: local editing only reads and writes project directories explicitly authorized by the user.
+python ~/.agents/skills/pptd-studio/scripts/export_images.py \
+  /path/to/deck.pptd --output /path/to/qa-images
+```
 
-## Why open-kimi-ppt
+On Windows, use `python` or `py` and the corresponding `%USERPROFILE%` path.
 
-Most PPT skills fall into three buckets: assemble OOXML / pptxgenjs in code, render each slide as a full-bleed image, or ship a swipeable HTML deck. open-kimi-ppt takes a different path: a PPTD intermediate layer plus real editable PPTX output, meant to be easy for agents to write and still editable in PowerPoint.
-
-| | open-kimi-ppt | Code-built PPTX (e.g. pptxgenjs) | Full-slide image PPT | Web HTML PPT |
-| --- | --- | --- | --- | --- |
-| Deliverable | PPTD project + PPTX | Usually PPTX only | Usually PPTX only | Single HTML file |
-| Agent-friendly | Clear per-page YAML | Lots of coordinates/API detail | Depends on image models & prompts | Strong HTML/CSS template constraints |
-| Editable in PowerPoint | Text, shapes, images stay editable | Editable, but hard to refine later | Flat bitmaps — hard to reword | Not native PPTX |
-| Visual quality | Real layouts + multimodal QA before export | Relies on agent layout tuning | Cohesive, poster-like | Strong motion; great for live demos |
-| Re-editing | Browser visual editor + autosave | Mostly re-run code | Usually regenerate images | Edit HTML source |
-| Best for | Formal PPTX you still need to tweak | Structured reports / template fills | Visually unified poster decks | In-browser talks / launches |
-
-Specifically:
-
-- PPTD describes theme, layout, and elements in YAML, which is more stable than raw OOXML / pptxgenjs and easier to edit locally than full-slide images.
-- You get both deliverables by default: an iterable PPTD project plus a ready-to-open PPTX with font embedding enabled when font resources are available and fade page transitions.
-- Existing Kimi element-animation metadata is preserved, but Open-PPTD does not currently execute or export those on-slide animations.
-- Text boxes and shapes in the exported PPTX remain editable in PowerPoint / WPS, unlike image-only decks.
-- You can preview, tweak, set transitions, and re-export in the browser without rerunning the whole agent flow.
-- Before export, full-page screenshots plus an overview sheet are used to catch occlusion, overflow, contrast, and layout issues.
-- It is not locked to the official model, so it costs less. Unlike official Kimi Slides, you can run this in any compatible agent with cheaper models such as DeepSeek. Even without multimodal vision, a model that follows the PPTD spec can still produce decent decks; with a multimodal model you additionally get the visual QA pass.
-
-[![DeepSeek generating a Liquid Glass-style PPT](docs/images/example-deepseek-liquid-glass.png)](docs/images/example-deepseek-liquid-glass.png)
-
-*Above: an Apple Liquid Glass-style deck generated with DeepSeek-V4-Flash in WorkBuddy.*
-
-[![Reasonix + DeepSeek generating DJI Pocket 4 Pro PPT](docs/images/example-reasonix-deepseek.png)](docs/images/example-reasonix-deepseek.png)
-
-*Above: a DJI Pocket 4 Pro deck generated with DeepSeek-V4-Flash in Reasonix.*
-
-[![ChatGPT / Codex with 5.6 Luna generating an iPhone 17 Pro PPT](docs/images/example-codex-iphone17pro.png)](docs/images/example-codex-iphone17pro.png)
-
-*Above: an iPhone 17 Pro deck generated with the 5.6 Luna model in ChatGPT / Codex.*
-
-### Style and themes
-
-By default the agent **does not** auto-apply a fixed theme: without a style cue it follows the scenario guides. The skill also ships ~30 official-style presets, used **only when you name one** (e.g. “use pine-green-strategy”).
-
-Browse theme IDs, descriptions, and preview images in **[theme_EN.md](theme_EN.md)**.
-
-> [!TIP]
-> It helps to state a PPT style in the prompt, name a preset, or attach a reference PPT / PPTX template. With a style constraint or template to follow, output is noticeably more consistent. Topic-only prompts leave the agent to invent a look, so results vary more.
-
-Common approaches:
-
-1. **Describe the style in the prompt** — e.g. dark tech, magazine layout, Apple liquid glass, minimal big-type poster slides;
-2. **Name a preset theme** — e.g. “use `pine-green-strategy`”; see the catalog in [theme_EN.md](theme_EN.md);
-3. **Provide a reference template** — upload an existing PPT / PPTX / screenshot and ask the agent to transfer colors, layout, and overall style.
-
-You can combine these: lock the look with a preset or template, then add one line about the style you want to emphasize.
-
-## Screenshots
-
-| Edit PPTD online | Export PPTX |
-| :---: | :---: |
-| [![Edit PPTD online](docs/images/editor-overview.png)](docs/images/editor-overview.png) | [![Export PPTX](docs/images/export-pptx.png)](docs/images/export-pptx.png) |
-
-## What is PPTD
-
-PPTD is a YAML-based presentation DSL — a simplified abstraction layer over OOXML. It preserves the essentials (theme, page layout, element positions) while dropping complex nesting such as Masters; every page is self-contained — what you see is what you get. See [reference/pptd.md](skills/open-kimi-ppt/reference/pptd.md) for the complete definition.
-
-A complete PPTD project looks like this:
+## PPTD project layout
 
 ```text
 deck/
-  deck.pptd     # manifest
-  pages/        # one .page file per slide
-  media/        # local media assets (if any)
-  deck.pptx     # PPTX generated by default
+├── deck.pptd
+├── pages/
+│   ├── 01-cover.page
+│   └── 02-content.page
+└── media/
+    └── hero.jpg
 ```
 
-## How it works and security boundaries
+PPTD is a YAML-based presentation DSL. See the
+[PPTD reference](skills/pptd-studio/reference/pptd.md) and
+[theme index](theme_EN.md).
 
-- The CLI serves static files on `127.0.0.1` only and does not listen on LAN interfaces.
-- The browser reads a complete PPTD project directory only after explicit user authorization.
-- Save callbacks may only modify `.pptd` and `.page` files; absolute paths and `..` traversal are rejected.
-- The editor, renderer, and PPTX writer are bundled locally; PPTD projects are not uploaded and Kimi login is not required.
-- Remote images or fonts explicitly referenced by a deck may still be fetched from their own hosts.
-
-## Compatibility
-
-Kimi-style templates are design instructions that continue to generate standard PPTD v2, so they remain usable in Open-PPTD. Unknown metadata, including Kimi element-animation fields, is preserved while editing, but Open-PPTD currently exports the static slide state only; slide-level fade transitions remain supported. A valid PPTX does not guarantee identical playback in PowerPoint, WPS, and Keynote.
-
-## Local development
+## Development and verification
 
 ```bash
-npm install --global .
 npm test
+python -m unittest discover -s skills/pptd-studio/tests -p "test_*.py" -v
 npm run pack:check
 ```
 
-## Legal
+Renderer or writer changes should also be checked using a real multi-page
+project, including the visual overview and the PPTX ZIP structure. See
+[CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and
+[CHANGELOG_EN.md](CHANGELOG_EN.md).
 
-Kimi, Kimi Slides, and related trademarks belong to their respective owners.
+## Security and privacy
+
+- The server listens on `127.0.0.1` by default.
+- PPTD parsing, editing, and PPTX conversion run locally.
+- A deck may still fetch remote image or font URLs it explicitly references.
+- Treat external PPTD, PPTX, fonts, and media as untrusted input.
+- The project does not provide or inject Kimi login tokens.
+
+## Open-source provenance and licenses
+
+PPTD Studio Skill is distributed under the [MIT License](LICENSE). It is a
+derivative project: original copyright notices are preserved and third-party
+code is not represented as original work of this project.
+
+- Predecessor: [acnlie/open-kimi-ppt-skill](https://github.com/acnlie/open-kimi-ppt-skill), MIT;
+- bundled runtime: [Shingwha/open-pptd](https://github.com/Shingwha/open-pptd),
+  with the pinned revision and modifications recorded in
+  [UPSTREAM.md](skills/pptd-studio/vendor/open-pptd/UPSTREAM.md);
+- redistributed ECharts, js-yaml, KaTeX, Bootstrap Icons, and d3 material is
+  listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [LICENSES](LICENSES/);
+- Kimi, Kimi Slides, Moonshot AI, Open-PPTD, PowerPoint, WPS, Keynote, and
+  other names and marks belong to their respective owners and are used only to
+  identify provenance or compatibility, not affiliation or endorsement.
+
+Keep `LICENSE`, `NOTICE`, `THIRD_PARTY_NOTICES.md`, and `LICENSES/` with any
+redistribution.

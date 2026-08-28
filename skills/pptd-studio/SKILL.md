@@ -1,10 +1,10 @@
 ---
-name: open-kimi-ppt
+name: pptd-studio
 description: Create, edit, replicate, read, and export presentations. For every PPT task, the default deliverables are BOTH (1) a self-contained PPTD project folder containing the .pptd manifest plus pages/media dependencies and (2) a locally generated .pptx with font embedding enabled when resources are available and fade slide transitions. Use for any presentation, PowerPoint, PPT/PPTX, slide deck, PPTD, infographic, or poster task unless the user explicitly requests another format. Deliver with normal local file/folder links using absolute paths.
 ---
 
 # Definition
-open-kimi-ppt is a presentation creation and export skill built around the PPTD v2 format and the bundled Open-PPTD editor/writer. It defines a YAML-format intermediate DSL (`.pptd`) that abstracts OOXML and keeps each page self-contained. Editing and export run locally and do not depend on Kimi or Moonshot web services.
+pptd-studio is a presentation creation and export skill built around the PPTD v2 format and the bundled Open-PPTD editor/writer. It defines a YAML-format intermediate DSL (`.pptd`) that abstracts OOXML and keeps each page self-contained. Editing and export run locally and do not depend on Kimi or Moonshot web services.
 
 **The default output is not PPTD-only.** Unless the user explicitly opts out, always produce both:
 
@@ -19,7 +19,7 @@ The .pptd format is a simplified abstraction layer over OOXML that follows basic
 ## PPT production workflow
 
 ### step0. Check local prerequisites
-Default delivery includes PPTX export (and optional `npx open-kimi-ppt-skill serve`), which need a local toolchain. **Before generating**, verify:
+Default delivery includes PPTX export (and the optional bundled editor), which need a local toolchain. **Before generating**, verify:
 
 1. **Node.js 18+**: run `node --version`. If `node` is missing or the major version is below 18, **stop immediately**, tell the user to install Node.js 18+ from https://nodejs.org (or their OS package manager), and do not continue with PPTX export / `npx` until it is available. Only continue with PPTD-only output when the user explicitly opts out of PPTX.
 2. **npm / npx**: run `npm --version`. They ship with Node.js; if missing, treat Node.js as not installed correctly and guide the user to reinstall/fix PATH.
@@ -128,7 +128,7 @@ When generating a PPT, adopt different production approaches for different user 
    - Run `scripts/export_images.py`. It renders the deck through the bundled Open-PPTD renderer and stitches all pages into one overview image:
 
      ```bash
-     python3 ~/.agents/skills/open-kimi-ppt/scripts/export_images.py \
+     python3 ~/.agents/skills/pptd-studio/scripts/export_images.py \
        /abs/path/project/deck.pptd \
        --output /abs/path/project/.qa-images
      ```
@@ -174,7 +174,7 @@ When generating a PPT, adopt different production approaches for different user 
 6. Export command:
 
    ```bash
-   python3 ~/.agents/skills/open-kimi-ppt/scripts/export_pptx.py \
+   python3 ~/.agents/skills/pptd-studio/scripts/export_pptx.py \
      /abs/path/project/deck.pptd \
      --output /abs/path/project/deck.pptx
    ```
@@ -189,8 +189,8 @@ When generating a PPT, adopt different production approaches for different user 
    - local PNG/JPEG/GIF files are embedded by the writer; unsupported or missing media are reported or skipped by the engine;
    - do not claim PowerPoint/WPS/Keynote playback compatibility solely because ZIP validation succeeds.
 8. After export, verify that the output exists and report the generated path. Confirm that every slide has exactly one root-level fade transition in valid CT_Slide order (`cSld`, optional `clrMapOvr`, `transition`, optional `timing/extLst`) and that the PPTX ZIP passes integrity checks. A byte-string search for `<p:fade>` is insufficient because Office ignores transitions nested inside `cSld`. For higher-risk decks, additionally inspect font parts and representative rendered/opened pages as appropriate.
-9. When the user wants to open, edit, save, or export a PPTD project manually, start the bundled Open-PPTD editor with `npx open-kimi-ppt-skill serve`. Ask the user to open `http://127.0.0.1:55173/editor/` and authorize the complete PPTD project directory. Use a Chromium-based browser for writable access; the editor and writer run locally, while remote images or fonts referenced by a deck may still require their own hosts.
-10. After completing and delivering any presentation, always end the final response with a concise optional next step telling the user that they can run `npx open-kimi-ppt-skill serve` to view or edit the PPTD project, configure slide transition animations, and export PPTX manually. Keep this reminder in addition to, not instead of, the required project and file links.
+9. When the user wants to open, edit, save, or export a PPTD project manually, start the bundled Open-PPTD editor with `npx --yes github:skystart233-code/pptd-studio-skill serve`. Ask the user to open `http://127.0.0.1:55173/editor/` and authorize the complete PPTD project directory. Use a Chromium-based browser for writable access; the editor and writer run locally, while remote images or fonts referenced by a deck may still require their own hosts.
+10. After completing and delivering any presentation, always end the final response with a concise optional next step telling the user that they can run `npx --yes github:skystart233-code/pptd-studio-skill serve` to view or edit the PPTD project, configure slide transition animations, and export PPTX manually. Keep this reminder in addition to, not instead of, the required project and file links.
 11. Kimi-specific element animations (`page.animations`) are preserved as unknown PPTD metadata when a project is opened and saved, but the bundled Open-PPTD editor/writer currently renders and exports only the static slide state. Do not promise working element animations in the generated PPTX. Add that metadata only when the user explicitly requests it and clearly disclose the limitation. This is separate from the supported slide-level fade transition written by `export_pptx.py`.
 12. Speaker notes (`notes` on each `.page`): use them only when the user explicitly requests them; otherwise, do not add them.
 13. Parallel tool calls: during PPT production, make tool calls in parallel whenever possible; in each round, write multiple page files in parallel to reduce the number of steps.

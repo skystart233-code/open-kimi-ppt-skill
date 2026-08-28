@@ -8,7 +8,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { fileURLToPath } from "node:url";
 import { startEditorServer } from "../lib/editor-server.js";
 
-const SKILL_NAME = "open-kimi-ppt";
+const SKILL_NAME = "pptd-studio";
 const MIN_NODE_MAJOR = 18;
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceDirectory = join(packageRoot, "skills", SKILL_NAME);
@@ -36,7 +36,7 @@ function printHelp(command) {
     console.log(`Start the local PPTD editor and exporter.
 
 Usage:
-  open-kimi-ppt-skill serve [options]
+  pptd-studio-skill serve [options]
 
 Options:
   --port <number>  HTTP port (default: 55173)
@@ -50,8 +50,8 @@ Options:
   console.log(`Install ${SKILL_NAME} for your AI coding agent or start its local editor.
 
 Usage:
-  open-kimi-ppt-skill [install] [options]
-  open-kimi-ppt-skill serve [options]
+  pptd-studio-skill [install] [options]
+  pptd-studio-skill serve [options]
 
 Install options:
   --target <directory>  Skills directory (repeatable)
@@ -65,10 +65,10 @@ In an interactive terminal (no --target / --yes / --all), a checklist is shown:
   ↑/↓ move  space select  a all  enter confirm
 
 For agents / CI, prefer:
-  npx open-kimi-ppt-skill@latest install -y
+  npx --yes github:skystart233-code/pptd-studio-skill install -y
 
-Re-running install replaces an existing open-kimi-ppt installation.
-Run "open-kimi-ppt-skill serve --help" for server options.
+Re-running install replaces an existing pptd-studio installation.
+Run "pptd-studio-skill serve --help" for server options.
 `);
 }
 
@@ -196,7 +196,7 @@ async function promptInstallTargets() {
     if (!initial) {
       output.write(`\u001b[${lines}A`);
     }
-    output.write("Install open-kimi-ppt to which skills directories?\n");
+    output.write("Install pptd-studio to which skills directories?\n");
     output.write("↑/↓ move · space select · a all · enter confirm · ctrl+c cancel\n");
     for (const [index, choice] of choices.entries()) {
       const pointer = index === cursor ? "❯" : " ";
