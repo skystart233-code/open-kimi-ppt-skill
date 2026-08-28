@@ -10,5 +10,5 @@ revision d7ee121a0c07538fad39c1d67a5e3ecfae56a116. Local changes are recorded
 in vendor/open-pptd/UPSTREAM.md. Third-party notices and license texts are in
 vendor/open-pptd/THIRD_PARTY_NOTICES.md and vendor/open-pptd/LICENSES/.
 
-No affiliation with or endorsement by Kimi, Moonshot AI, Open-PPTD,
-Microsoft, or other trademark owners is implied.
+No affiliation with or endorsement by any third-party trademark owner is
+implied. The repository's TRADEMARKS.md records the applicable policy.

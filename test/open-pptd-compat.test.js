@@ -7,7 +7,7 @@ import { parseDeck, serializeDeck } from "../skills/pptd-studio/vendor/open-pptd
 import { mediaFilesOfDeck } from "../skills/pptd-studio/vendor/open-pptd/editor/app/project/images.js";
 import { exportDeck } from "../skills/pptd-studio/vendor/open-pptd/lib/pptd-export.js";
 
-test("preserves Kimi-only animation metadata during an Open-PPTD round trip", () => {
+test("preserves legacy animation metadata during an Open-PPTD round trip", () => {
   const manifest = `version: v2\ntitle: compatibility\nsize: [960, 540]\npages: [pages/1.page]\n`;
   const page = `pageType: content\nelements:\n  - elementId: title\n    elementType: text\n    bounds: [20, 20, 300, 80]\n    text: Hello\n    animations:\n      - type: fadeIn\n        duration: 0.5\n`;
   const deck = parseDeck(manifest, new Map([["pages/1.page", page]]));

@@ -1,11 +1,11 @@
 {
   "name": "pptd-studio-skill",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Local-first PPTD presentation skill with an editable project format, a bundled Open-PPTD studio, and PPTX export.",
   "license": "MIT",
   "author": "skystart233-code contributors",
   "contributors": [
-    "Binaryify Zhuang (original open-kimi-ppt-skill)",
+    "Binaryify Zhuang (predecessor project)",
     "Open-PPTD contributors"
   ],
   "homepage": "https://github.com/skystart233-code/pptd-studio-skill#readme",
@@ -40,6 +40,8 @@
     "skills/pptd-studio/SKILL.md",
     "skills/pptd-studio/LICENSE.txt",
     "skills/pptd-studio/NOTICE",
+    "skills/pptd-studio/TRADEMARKS.md",
+    "skills/pptd-studio/RIGHTS_POLICY.md",
     "skills/pptd-studio/reference/",
     "skills/pptd-studio/vendor/",
     "skills/pptd-studio/scripts/export_images.py",
@@ -50,6 +52,9 @@
     "CHANGELOG_EN.md",
     "CONTRIBUTING.md",
     "SECURITY.md",
+    "TRADEMARKS.md",
+    "RIGHTS_POLICY.md",
+    "PROVENANCE.md",
     "NOTICE",
     "THIRD_PARTY_NOTICES.md",
     "LICENSES/",

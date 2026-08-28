@@ -2,7 +2,7 @@
 
 [简体中文](theme.md) | [English](theme_EN.md)
 
-The skill ships design-system references inherited from its predecessor. Use them **only when the user names one** (self-directed design does not auto-pick a preset). Theme names describe visual direction and do not imply official authorization or endorsement by any vendor.
+The skill ships design-system references inherited from its predecessor. Use them **only when the user names one** (self-directed design does not auto-pick a preset). Theme names describe visual direction and do not imply official authorization or endorsement by any vendor. See the source and usage boundary in [`NOTICE.md`](skills/pptd-studio/reference/design_system/NOTICE.md).
 
 ## How to use
 

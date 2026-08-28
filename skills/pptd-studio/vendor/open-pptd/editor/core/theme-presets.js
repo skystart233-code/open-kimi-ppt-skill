@@ -1,10 +1,10 @@
 // ============================================================================
 // theme-presets.js — 内置主题数据（默认主题 + 10 套配色预设，纯数据无逻辑）
 // ----------------------------------------------------------------------------
-// 结构严格对齐官方 Theme（references/pptd.md §3 Theme）：
+// 结构严格对齐 PPTD v2 Theme（references/pptd.md §3 Theme）：
 //   { colors: Record<string, Color>, textStyles: Record<string, TextStyleConfig>,
 //     tableStyles: Record<string, TableStyleConfig> }
-// 无官方之外的顶层字段。配色 = 生成时一次性设计决策（对齐 Kimi skill 工作流），
+// 不增加规范之外的顶层字段。配色 = 生成时一次性设计决策，
 // 编辑器提供 10 套 colors 预设一键应用（详见 docs/editor-v2-ux.md）。
 //
 // colors 键约定（均为合法 $引用目标，全部显式 hex，不依赖动态派生）：

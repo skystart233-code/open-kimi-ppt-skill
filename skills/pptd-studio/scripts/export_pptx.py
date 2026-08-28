@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Export PPTD to PPTX with the bundled Open-PPTD writer.
 
-The export is local and does not load Kimi or Moonshot web resources. The
+The export is local and does not load hosted-editor web resources. The
 bundled writer understands PPTD v2 and preserves unsupported metadata when a
-project is edited. Kimi-specific element animations remain in PPTD, but the
+project is edited. Legacy element-animation metadata remains in PPTD, but the
 Open-PPTD writer currently exports the static slide state only.
 """
 

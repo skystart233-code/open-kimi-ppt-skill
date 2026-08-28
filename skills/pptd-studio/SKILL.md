@@ -4,7 +4,7 @@ description: Create, edit, replicate, read, and export presentations. For every 
 ---
 
 # Definition
-pptd-studio is a presentation creation and export skill built around the PPTD v2 format and the bundled Open-PPTD editor/writer. It defines a YAML-format intermediate DSL (`.pptd`) that abstracts OOXML and keeps each page self-contained. Editing and export run locally and do not depend on Kimi or Moonshot web services.
+pptd-studio is a presentation creation and export skill built around the PPTD v2 format and a bundled local editor/writer. It defines a YAML-format intermediate DSL (`.pptd`) that abstracts OOXML and keeps each page self-contained. Editing and export run locally and do not depend on a third-party hosted presentation editor.
 
 **The default output is not PPTD-only.** Unless the user explicitly opts out, always produce both:
 
@@ -25,10 +25,18 @@ Default delivery includes PPTX export (and the optional bundled editor), which n
 2. **npm / npx**: run `npm --version`. They ship with Node.js; if missing, treat Node.js as not installed correctly and guide the user to reinstall/fix PATH.
 3. **python3**: run `python3 --version` (on Windows, `python` may be the correct command). Needed for `export_pptx.py` / `export_images.py`.
 4. **Chrome / Chromium / Edge**: needed only for image rendering/visual QA and interactive editing; command-line PPTX export itself does not require a browser.
-5. The Open-PPTD runtime is bundled with the skill. Image QA auto-installs **Pillow** when missing; **PyYAML** is optional and only improves the page-path labels in the QA summary. No Kimi/Moonshot network access is required.
+5. The local editor/writer runtime is bundled with the skill. Image QA auto-installs **Pillow** when missing; **PyYAML** is optional and only improves the page-path labels in the QA summary. No hosted-editor account or session token is required.
 
 ### step1. Read the context thoroughly
 Read **all files uploaded by the user**, the provided URLs, and the pptd format guide `reference/pptd.md` to fully understand the user's requirements.
+
+### Rights and identity guardrails
+
+1. Do not present PPTD Studio Skill as an official, endorsed, sponsored, or affiliated product of any third party.
+2. Bundled design-system references are inherited open-source project material and must be presented as generic visual directions, never as a third party's official or authorized templates. Use any external template only when the user supplies it and confirms they own it or are authorized to use it.
+3. For an unaffiliated visual reference, extract only general ideas such as hierarchy, density, contrast, and rhythm; create an original layout and original visual assets. Do not copy distinctive illustrations, logos, trade dress, or a whole deck page-for-page unless the user confirms authorization.
+4. Use third-party names only when factually necessary to identify the subject of a presentation, a file format, interoperability, or provenance. Do not place third-party names in this project's own title, package identity, or promotional claims.
+5. Prefer user-owned media, public-domain material, or assets with a license that permits the intended use. Record attribution and license information when a source requires it.
 
 ### step2. Understand the user's requirements
 Understand the user's requirements based on the context:
@@ -39,7 +47,7 @@ Understand the user's requirements based on the context:
 
 2. Then determine the design direction
   - Self-directed design: no preference, or only simple style constraints given; you need to fill in or create the design
-  - Design system: a preset design system from the skill (`reference/design_system/`) is specified, or the user provides a complete and detailed design scheme covering all color, font, layout, and component specifications
+  - Design system: the user selects a bundled generic preset under `reference/design_system/`, or provides an original or authorized design scheme covering color, font, layout, and component specifications
   - Use a template: a template is provided and must be used
   - Style transfer: a style reference source is provided (images, web pages, etc.)
 
@@ -61,7 +69,7 @@ When any of the following situations arise, resolve them by asking the user (use
 - The files/URLs provided by the user are inaccessible
 2. Conflicting intents
 - The user's intents contradict each other. For example:
-  * A design system is selected while also requesting a style that is completely inconsistent with that design system (e.g., using a McKinsey style while requiring large areas of whitespace on pages) / using a template / referencing an image style
+  * A design system is selected while also requesting a style that is completely inconsistent with that design system / using a template / referencing an image style
   * Requesting both "make 10 pages" and "deliver 30+ pages of output"
 3. Unable to determine the user's requirements on your own
 - When the purpose, design direction, input type, page count, etc. are hard to determine by yourself
@@ -71,7 +79,8 @@ When any of the following situations arise, resolve them by asking the user (use
 Before generating, first read `reference/pptd.md` to understand the pptd format definition and constraints.
 
 #### Replicating a PPT
-- Analyze the images to estimate element positions, fonts and sizes, etc., and **replicate 1:1 as closely as possible**.
+- First confirm that the user owns the source or is authorized to reproduce it. If authorization is unclear, reproduce only the facts and general visual principles in a new original layout; do not make a page-for-page copy.
+- For an authorized source, analyze the images to estimate element positions, fonts and sizes, etc., and reproduce it as closely as the authorization permits.
 - For parts that are difficult to make out, use methods such as grid lines and close-up views to improve understanding.
 - Replicate simple content in the image with elements; icons may be approximated with icons provided by Font Awesome. For content that cannot be approximated with icons or shapes, such as photos and avatars, use tools such as bash or python to crop and split the original image, then add the resulting image elements to the presentation
 
@@ -92,9 +101,9 @@ When generating a PPT, adopt different production approaches for different user 
 
 ##### Design system
 1. Read the general constraints section of the `reference/slides_categories.md` guide, and read the scenario document corresponding to the user's query as the design foundation
-2. Read the specified design system as the presentation style: either the user-provided design scheme, or the matching preset under `reference/design_system/` (search by name / path the user specified; prefer the folder's `design.md` when present). It is strictly forbidden to reference or mix in other design styles
+2. Read either the matching bundled preset under `reference/design_system/` or the user-provided original/authorized design system as the presentation style. It is strictly forbidden to mix in unrelated design styles
 3. Produce the presentation with reference to the above
-4. Do not auto-pick a preset during self-directed design; only use `reference/design_system/` when a preset is explicitly specified
+4. Do not describe a bundled preset as official, vendor-authored, or vendor-authorized. Do not fetch a third-party branded preset merely because the user names a vendor; require the user to provide an authorized file
 
 ##### Using a template
 1. Convert the user's uploaded pptx file into pptd form
@@ -104,14 +113,14 @@ When generating a PPT, adopt different production approaches for different user 
 
 ##### Style transfer
 1. Analyze the reference file's visual style (color scheme, font style, element characteristics, layout characteristics, content density, etc.), page layouts, content structures, reusable components (icons, shapes, smartart, reusable body layout schemes, etc.), and element styles (e.g., whitespace/line/card separators, square/rounded corners, etc.).
-- If the user provides a style reference URL, do not only read the text content; refer to and learn from the page's visual effect more to help understand the style
-2. Produce the presentation using the reference file's style characteristics. You are encouraged to reuse illustrations, fonts, font-size hierarchies, elements, etc. from the original pdf/url
+- If the user provides a style reference URL, study its high-level visual principles as well as its text, but create a distinct composition unless the user confirms reproduction rights
+2. Produce a distinct presentation using high-level characteristics such as hierarchy, spacing, contrast, and rhythm. Reuse specific illustrations, fonts, logos, or elements only when their license permits the intended use or the user confirms authorization; otherwise create or source rights-cleared alternatives.
 
 ##### Images and Visual Materials
 1. Images are an effective way to enrich a presentation's visual impact. Appropriate images should be used not only on covers and section dividers, but also on body pages to enrich the page, aid understanding, or support decision-making
 2. Images are used to show concrete subjects, explain content, provide evidence, or establish a scene. Logos, icons, decorative textures, and very small thumbnails do not count as substantive imagery.
 3. When a page involves products, people, places, buildings, events, cases, interfaces, experimental subjects, or spatial environments, prioritize corresponding real images or screenshots. If real images and screenshots cannot be obtained, generated images may be used instead.
-4. Image priority: images provided by the user; images from official websites, official reports, and credible sources; searched images that are directly relevant to the content; images generated for conceptual expression or atmosphere.
+4. Image priority: user-provided images whose use is authorized; public-domain or appropriately licensed assets; images from official sources only when their terms permit the intended use; generated images for conceptual expression or atmosphere.
 5. After deciding which images are needed, complete image search, generation, and downloading in a batch before designing pages around their proportions. Save images in the `media` directory, keep them clear, and never stretch or distort them.
 6. Analytical, technical, and academic PPTs should use corresponding evidence images when products, experiments, interfaces, cases, or on-site materials are available. Do not reduce every page to text, color blocks, and shapes.
 7. Do not add irrelevant images merely to meet a quantity target. Every image must be directly relevant to the page's conclusion or communication goal.
@@ -191,6 +200,6 @@ When generating a PPT, adopt different production approaches for different user 
 8. After export, verify that the output exists and report the generated path. Confirm that every slide has exactly one root-level fade transition in valid CT_Slide order (`cSld`, optional `clrMapOvr`, `transition`, optional `timing/extLst`) and that the PPTX ZIP passes integrity checks. A byte-string search for `<p:fade>` is insufficient because Office ignores transitions nested inside `cSld`. For higher-risk decks, additionally inspect font parts and representative rendered/opened pages as appropriate.
 9. When the user wants to open, edit, save, or export a PPTD project manually, start the bundled Open-PPTD editor with `npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz serve`. Ask the user to open `http://127.0.0.1:55173/editor/` and authorize the complete PPTD project directory. Use a Chromium-based browser for writable access; the editor and writer run locally, while remote images or fonts referenced by a deck may still require their own hosts.
 10. After completing and delivering any presentation, always end the final response with a concise optional next step telling the user that they can run `npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz serve` to view or edit the PPTD project, configure slide transition animations, and export PPTX manually. Keep this reminder in addition to, not instead of, the required project and file links.
-11. Kimi-specific element animations (`page.animations`) are preserved as unknown PPTD metadata when a project is opened and saved, but the bundled Open-PPTD editor/writer currently renders and exports only the static slide state. Do not promise working element animations in the generated PPTX. Add that metadata only when the user explicitly requests it and clearly disclose the limitation. This is separate from the supported slide-level fade transition written by `export_pptx.py`.
+11. Legacy element-animation fields (`page.animations`) are preserved as unknown PPTD metadata when a project is opened and saved, but the bundled editor/writer currently renders and exports only the static slide state. Do not promise working element animations in the generated PPTX. Add that metadata only when the user explicitly requests it and clearly disclose the limitation. This is separate from the supported slide-level fade transition written by `export_pptx.py`.
 12. Speaker notes (`notes` on each `.page`): use them only when the user explicitly requests them; otherwise, do not add them.
 13. Parallel tool calls: during PPT production, make tool calls in parallel whenever possible; in each round, write multiple page files in parallel to reduce the number of steps.

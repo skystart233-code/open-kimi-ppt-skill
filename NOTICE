@@ -15,6 +15,5 @@ image loading, persistence, rendering, and package export. See
 skills/pptd-studio/vendor/open-pptd/UPSTREAM.md for the patch summary.
 
 Third-party software notices and license locations are listed in
-THIRD_PARTY_NOTICES.md. Kimi, Kimi Slides, Moonshot AI, Open-PPTD, Microsoft,
-PowerPoint, WPS, Keynote, and other names or marks belong to their respective
-owners. This project is not endorsed by or affiliated with those owners.
+THIRD_PARTY_NOTICES.md. Third-party names and marks remain the property of
+their respective owners. This project is independent; see TRADEMARKS.md.

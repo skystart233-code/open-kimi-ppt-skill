@@ -7,9 +7,9 @@ PPTD v2 项目描述页面，经过浏览器可视化编辑和图片质检，导
 PowerPoint 或 WPS 中继续修改的 PPTX。
 
 > [!IMPORTANT]
-> PPTD Studio Skill 是独立维护的开源衍生项目，不是 Kimi、Moonshot AI、
-> Open-PPTD、Microsoft 或其他厂商的官方产品。项目来源、修改内容和第三方
-> 许可证均在本文及 [NOTICE](NOTICE) 中明确列出。
+> PPTD Studio Skill 是独立维护的开源项目，不隶属于、不代表、也未获得任何
+> 第三方产品厂商的背书。必要的历史来源与第三方软件归属集中记录在
+> [PROVENANCE.md](PROVENANCE.md)、[NOTICE](NOTICE) 和许可证文件中。
 
 ## 能做什么
 
@@ -18,13 +18,14 @@ PowerPoint 或 WPS 中继续修改的 PPTX。
 - 在本地浏览器中编辑 PPTD，保存回项目目录并手动导出 PPTX。
 - 本地生成 PPTX，支持可编辑文字、形状、图片、图表和幻灯片淡入淡出。
 - 将全部页面渲染成图片并拼接总览，供多模态模型做视觉质检。
-- 保留前身项目附带的设计系统参考；这些参考生成标准 PPTD v2。
+- 使用内置的通用设计系统参考，或用户原创、自有、已获授权的模板和设计规范。
 
 ## 编辑器改动
 
-从 2.0.0 开始，项目不再加载 Kimi 网页编辑器或 Moonshot 静态资源。编辑、
-渲染和 PPTX writer 改为内置 [Open-PPTD](https://github.com/Shingwha/open-pptd)
-运行时，并固定到可审计的上游提交。
+从 2.0.0 开始，项目不再加载前身项目使用的托管网页编辑器或其静态资源。
+编辑、渲染和 PPTX writer 改为内置
+[Open-PPTD](https://github.com/Shingwha/open-pptd) 运行时，并固定到可审计的
+上游提交。
 
 本项目在上游基础上做了以下集成改动：
 
@@ -40,13 +41,23 @@ PowerPoint 或 WPS 中继续修改的 PPTX。
 | --- | --- |
 | PPTD v2 清单、页面、主题和版式 | 支持 |
 | 文字、形状、图片、背景图、表格和图表 | 支持 |
-| 前身项目中的设计系统参考 | 支持，继续生成 PPTD v2 |
+| 内置通用设计系统参考 | 支持；不代表任何厂商官方模板 |
+| 用户提供且有权使用的 PPTX/PPTD 模板 | 支持 |
 | 未识别的 PPTD 字段 | 编辑保存时保留 |
 | 幻灯片级淡入淡出 | 支持 |
-| Kimi 专属页内元素动画 | 元数据保留，但 Open-PPTD 暂不播放或导出 |
+| 旧版页内元素动画 | 元数据保留，但当前编辑器暂不播放或导出 |
 
-因此，“旧模板不能用”不是主要风险；真正的边界是专属动画执行器。需要页内
-动画的项目应保留 PPTD 元数据，并在交付时明确当前 PPTX 为静态版式。
+技术兼容不等于获得复制或再分发许可。需要页内动画的项目可以保留相关
+PPTD 元数据，但交付时应明确当前 PPTX 只包含静态版式。
+
+### 模板与素材权利策略
+
+内置设计系统参考和历史示例继续保留，因为它们是 Skill 的重要功能与展示材料。
+它们来自采用 MIT 许可证的前身项目，但不应被宣传成任何厂商的“官方同款”或
+授权模板。示例中的产品图片、Logo、字体和其他第三方素材可能受各自权利约束；
+技术可用和仓库可见不等于自动获得独立商用或再分发许可。具体规则见
+[主题与模板说明](theme.md)、[示例素材说明](example/NOTICE.md) 和
+[RIGHTS_POLICY.md](RIGHTS_POLICY.md)。
 
 ## 环境要求
 
@@ -161,21 +172,23 @@ npm run pack:check
 - PPTD 解析、编辑和 PPTX 转换在本机执行；
 - 文稿主动引用远程图片或字体时，浏览器仍可能访问对应资源地址；
 - 外部 PPTD、PPTX、字体和媒体文件均应按不可信输入处理；
-- 项目不会提供或注入任何 Kimi 登录令牌。
+- 项目不提供或注入任何第三方服务的登录令牌。
 
 ## 开源来源与许可证
 
 PPTD Studio Skill 整体采用 [MIT License](LICENSE)。这是衍生项目，不会删除
 原作者的版权声明，也不会把第三方代码宣称为本项目原创。
 
-- 前身项目：[acnlie/open-kimi-ppt-skill](https://github.com/acnlie/open-kimi-ppt-skill)，MIT；
+- 前身项目：[acnlie/open-kimi-ppt-skill](https://github.com/acnlie/open-kimi-ppt-skill)，
+  其仓库根许可证为 MIT；本项目仅在来源记录中保留该名称；
 - 内置运行时：[Shingwha/open-pptd](https://github.com/Shingwha/open-pptd)，
   固定版本及本地修改见
   [UPSTREAM.md](skills/pptd-studio/vendor/open-pptd/UPSTREAM.md)；
 - ECharts、js-yaml、KaTeX、Bootstrap Icons 和 d3 等再分发组件见
   [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 [LICENSES](LICENSES/)；
-- Kimi、Kimi Slides、Moonshot AI、Open-PPTD、PowerPoint、WPS 和 Keynote 等名称
-  及商标归各自权利人所有，仅用于说明来源或兼容性，不表示合作或背书。
+- 第三方名称与商标仅在说明来源、互操作性或文稿主题确有必要时使用，不表示
+  合作、授权或背书；详见 [TRADEMARKS.md](TRADEMARKS.md)。
 
 使用、修改或再分发时，请同时保留 `LICENSE`、`NOTICE`、
-`THIRD_PARTY_NOTICES.md` 和 `LICENSES/`。
+`THIRD_PARTY_NOTICES.md`、`PROVENANCE.md` 和 `LICENSES/`。权利人通知流程见
+[RIGHTS_POLICY.md](RIGHTS_POLICY.md)。

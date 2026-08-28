@@ -4,6 +4,23 @@
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] - 2026-08-28
+
+### Rights and clean-brand hardening
+
+- Removed unnecessary third-party brand references from the READMEs, Skill
+  workflow, code comments, and test names
+- Retained all 60 inherited design-system presets, product demos, screenshots,
+  theme previews, media, and finished PPTX examples while making clear that
+  they are not any vendor's official or authorized templates
+- Added focused provenance and usage notices for example media and presets;
+  users must still confirm rights for independent commercial reuse or
+  redistribution of third-party images, logos, fonts, and marks
+- Added `TRADEMARKS.md`, `RIGHTS_POLICY.md`, and `PROVENANCE.md` to separate
+  trademark boundaries, rights-holder notices, and necessary attribution
+- Added rights checks for templates, logos, fonts, images, style transfer, and
+  page-by-page replication to the Skill workflow
+
 ## [2.0.0] - 2026-08-28
 
 ### Breaking changes
@@ -29,11 +46,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- Replaced the default editor with the bundled Open-PPTD editor; `www.kimi.com` and Moonshot static assets are no longer loaded
-- Switched PPTX export to the local Open-PPTD OOXML writer, removing browser-download, agent-browser, and Kimi-session dependencies
+- Replaced the default editor with the bundled Open-PPTD editor; the predecessor's hosted editor and static assets are no longer loaded
+- Switched PPTX export to the local Open-PPTD OOXML writer, removing browser-download, agent-browser, and third-party-session dependencies
 - Switched image QA to Open-PPTD's local headless renderer
-- Retained every Kimi-style design system; PPTD v2 layout, theme, and resource compatibility remains intact
-- Kimi element-animation metadata survives edit/save round trips, but Open-PPTD currently exports static slides only; this boundary is documented and tested
+- Retained the predecessor's design systems; version 2.0.1 adds clearer non-official wording and usage boundaries
+- Legacy element-animation metadata survives edit/save round trips, but Open-PPTD currently exports static slides only; this boundary is documented and tested
 
 ### Security
 

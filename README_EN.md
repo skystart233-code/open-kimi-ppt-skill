@@ -7,10 +7,10 @@ versionable PPTD v2 projects, provides browser-based editing and visual QA,
 and exports PPTX files whose text, shapes, images, and charts remain editable.
 
 > [!IMPORTANT]
-> PPTD Studio Skill is an independently maintained open-source derivative. It
-> is not an official product of Kimi, Moonshot AI, Open-PPTD, Microsoft, or any
-> other vendor. Provenance, modifications, and redistributed licenses are
-> documented here and in [NOTICE](NOTICE).
+> PPTD Studio Skill is independently maintained. It is not affiliated with,
+> sponsored by, endorsed by, or presented on behalf of any third-party vendor.
+> Necessary provenance is centralized in [PROVENANCE.md](PROVENANCE.md),
+> [NOTICE](NOTICE), and the license files.
 
 ## Capabilities
 
@@ -19,13 +19,13 @@ and exports PPTX files whose text, shapes, images, and charts remain editable.
 - Edit PPTD locally in a browser and save changes back to the project folder.
 - Export editable text, shapes, images, charts, and fade slide transitions.
 - Render every page and stitch an overview image for multimodal visual QA.
-- Reuse the legacy design-system references inherited from the predecessor;
-  they continue to generate standard PPTD v2.
+- Use bundled generic design-system references or original, owned, and
+  authorized templates and design specifications.
 
 ## Editor migration
 
-Since 2.0.0, the project no longer loads the Kimi web editor or Moonshot static
-assets. Editing, rendering, and PPTX writing use a bundled, pinned
+Since 2.0.0, the project no longer loads the hosted web editor or static assets
+used by its predecessor. Editing, rendering, and PPTX writing use a bundled, pinned
 [Open-PPTD](https://github.com/Shingwha/open-pptd) runtime.
 
 This integration adds:
@@ -43,14 +43,27 @@ This integration adds:
 | --- | --- |
 | PPTD v2 manifest, pages, themes, and layouts | Supported |
 | Text, shapes, images, backgrounds, tables, and charts | Supported |
-| Predecessor design-system references | Supported; they generate PPTD v2 |
+| Bundled generic design-system references | Supported; not represented as any vendor's official templates |
+| User-supplied PPTX/PPTD templates the user may lawfully use | Supported |
 | Unknown PPTD fields | Preserved during edit/save |
 | Slide-level fade transitions | Supported |
-| Kimi-specific on-slide element animations | Metadata preserved; not played or exported by Open-PPTD |
+| Legacy on-slide element animations | Metadata preserved; not played or exported by the current editor |
 
-The practical boundary is the proprietary animation executor, not ordinary
-template layout. Keep the metadata when needed and disclose that the current
-PPTX export contains the static slide state.
+Technical compatibility does not grant permission to copy or redistribute a
+template. Keep legacy animation metadata when needed and disclose that the
+current PPTX export contains only the static slide state.
+
+### Template and asset rights policy
+
+Bundled design-system references and historical examples remain available
+because they are important parts of the Skill's utility and demonstration
+value. They come from the MIT-licensed predecessor project, but must not be
+marketed as any vendor's “official-like” or authorized templates. Product
+images, logos, fonts, and other third-party material visible in examples may
+remain subject to separate rights; technical availability does not itself grant
+commercial reuse or redistribution permission. See the
+[theme policy](theme_EN.md), [example notice](example/NOTICE.md), and
+[RIGHTS_POLICY.md](RIGHTS_POLICY.md).
 
 ## Requirements
 
@@ -170,7 +183,7 @@ project, including the visual overview and the PPTX ZIP structure. See
 - PPTD parsing, editing, and PPTX conversion run locally.
 - A deck may still fetch remote image or font URLs it explicitly references.
 - Treat external PPTD, PPTX, fonts, and media as untrusted input.
-- The project does not provide or inject Kimi login tokens.
+- The project does not provide or inject login tokens for third-party services.
 
 ## Open-source provenance and licenses
 
@@ -178,15 +191,17 @@ PPTD Studio Skill is distributed under the [MIT License](LICENSE). It is a
 derivative project: original copyright notices are preserved and third-party
 code is not represented as original work of this project.
 
-- Predecessor: [acnlie/open-kimi-ppt-skill](https://github.com/acnlie/open-kimi-ppt-skill), MIT;
+- predecessor: [acnlie/open-kimi-ppt-skill](https://github.com/acnlie/open-kimi-ppt-skill),
+  whose root repository license is MIT; that name is retained only in provenance;
 - bundled runtime: [Shingwha/open-pptd](https://github.com/Shingwha/open-pptd),
   with the pinned revision and modifications recorded in
   [UPSTREAM.md](skills/pptd-studio/vendor/open-pptd/UPSTREAM.md);
 - redistributed ECharts, js-yaml, KaTeX, Bootstrap Icons, and d3 material is
   listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [LICENSES](LICENSES/);
-- Kimi, Kimi Slides, Moonshot AI, Open-PPTD, PowerPoint, WPS, Keynote, and
-  other names and marks belong to their respective owners and are used only to
-  identify provenance or compatibility, not affiliation or endorsement.
+- third-party names and marks are used only when necessary to identify
+  provenance, interoperability, or a presentation subject; they do not imply
+  authorization, affiliation, or endorsement. See [TRADEMARKS.md](TRADEMARKS.md).
 
-Keep `LICENSE`, `NOTICE`, `THIRD_PARTY_NOTICES.md`, and `LICENSES/` with any
-redistribution.
+Keep `LICENSE`, `NOTICE`, `THIRD_PARTY_NOTICES.md`, `PROVENANCE.md`, and
+`LICENSES/` with any redistribution. Rights-holder notices are handled under
+[RIGHTS_POLICY.md](RIGHTS_POLICY.md).
