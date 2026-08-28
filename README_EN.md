@@ -68,15 +68,15 @@ the renamed npm package has already been published.
 
 ```bash
 # Install non-interactively into ~/.agents/skills/pptd-studio
-npx --yes github:skystart233-code/pptd-studio-skill install -y
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install -y
 
 # Install into one or more agent skill directories
-npx --yes github:skystart233-code/pptd-studio-skill install \
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install \
   --target ~/.codex/skills \
   --target ~/.claude/skills
 
 # Install into every detected agent directory
-npx --yes github:skystart233-code/pptd-studio-skill install --all
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install --all
 ```
 
 Or run from source:
@@ -110,7 +110,7 @@ and perform visual QA before export.
 ### Start the local editor
 
 ```bash
-npx --yes github:skystart233-code/pptd-studio-skill serve --open
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz serve --open
 ```
 
 Or, from a source checkout:

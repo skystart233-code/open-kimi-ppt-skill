@@ -173,7 +173,10 @@ test("help documents interactive install and -y for agents", () => {
   assert.match(result.stdout, /space select/);
   assert.match(result.stdout, /-y, --yes/);
   assert.match(result.stdout, /--all/);
-  assert.match(result.stdout, /npx --yes github:skystart233-code\/pptd-studio-skill install -y/);
+  assert.match(
+    result.stdout,
+    /npx --yes https:\/\/github\.com\/skystart233-code\/pptd-studio-skill\/archive\/refs\/heads\/main\.tar\.gz install -y/,
+  );
 });
 
 test("-h shows help", () => {

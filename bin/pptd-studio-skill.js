@@ -65,7 +65,7 @@ In an interactive terminal (no --target / --yes / --all), a checklist is shown:
   ↑/↓ move  space select  a all  enter confirm
 
 For agents / CI, prefer:
-  npx --yes github:skystart233-code/pptd-studio-skill install -y
+  npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install -y
 
 Re-running install replaces an existing pptd-studio installation.
 Run "pptd-studio-skill serve --help" for server options.

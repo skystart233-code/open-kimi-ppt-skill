@@ -63,15 +63,15 @@ PowerPoint 或 WPS 中继续修改的 PPTX。
 
 ```bash
 # 非交互安装到 ~/.agents/skills/pptd-studio
-npx --yes github:skystart233-code/pptd-studio-skill install -y
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install -y
 
 # 指定一个或多个 Agent skills 目录
-npx --yes github:skystart233-code/pptd-studio-skill install \
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install \
   --target ~/.codex/skills \
   --target ~/.claude/skills
 
 # 安装到所有已检测到的 Agent 目录
-npx --yes github:skystart233-code/pptd-studio-skill install --all
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz install --all
 ```
 
 也可以从源码运行：
@@ -102,7 +102,7 @@ node bin/pptd-studio-skill.js install -y
 ### 启动本地编辑器
 
 ```bash
-npx --yes github:skystart233-code/pptd-studio-skill serve --open
+npx --yes https://github.com/skystart233-code/pptd-studio-skill/archive/refs/heads/main.tar.gz serve --open
 ```
 
 或在源码目录运行：
